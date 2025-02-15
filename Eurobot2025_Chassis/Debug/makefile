@@ -76,8 +76,8 @@ all: main-build
 main-build: Eurobot2025_Chassis.elf secondary-outputs
 
 # Tool invocations
-Eurobot2025_Chassis.elf Eurobot2025_Chassis.map: $(OBJS) $(USER_OBJS) C:\Users\stanl\STM32CubeIDE\workspace_1.10.1\Eurobot2025_Chassis\STM32H723ZGTX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-g++ -o "Eurobot2025_Chassis.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m7 -T"C:\Users\stanl\STM32CubeIDE\workspace_1.10.1\Eurobot2025_Chassis\STM32H723ZGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Eurobot2025_Chassis.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -lstdc++ -lsupc++ -Wl,--end-group
+Eurobot2025_Chassis.elf Eurobot2025_Chassis.map: $(OBJS) $(USER_OBJS) /home/tu/Eurobot-Firmware/Eurobot2025_Chassis/STM32H723ZGTX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-g++ -o "Eurobot2025_Chassis.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m7 -T"/home/tu/Eurobot-Firmware/Eurobot2025_Chassis/STM32H723ZGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Eurobot2025_Chassis.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -lstdc++ -lsupc++ -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 

@@ -97,6 +97,7 @@ bool DEBUGMODE::isReach(double a, double b, double range) {
 	return (fabs(a - b) < range);
 }
 
+// TODO: Modify CarRadius for short and long if using this function.
 void DEBUGMODE::UpdateCarConstant() {
 	DC_Motor::ROUND = 2 * DC_Motor::WheelRadius * 3.14159;
 

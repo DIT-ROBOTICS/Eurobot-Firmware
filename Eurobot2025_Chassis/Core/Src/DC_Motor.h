@@ -6,22 +6,24 @@
 // Gearbox -> 22 : 1
 // Encoder Resolution : 1024
 // Wheel Radius : 0.024 m
-// Car Radius : 0.155 m
+// Car Radius Short : 0.104 m
+// Car Radius Long : 0.131 m
 // Timer for reading encoder CNT : 1k Hz
 #define COUNT_TIME 0.001
 
 // 4 * Resolution * GearBox * CountTime
-#define RES_Ratio 90.112
+#define RES_Ratio_Driving 90.112
 
 // PWM frequency : 20 kHz (Timer Freq : 128 Mhz)
 #define MOTOR_PWM_PULSE 6400
 
+// TODO: Modify for new motor and encoder layout
 // Motor 1 :
-// 		ENC : TIM_2
+// 		ENC : TIM_1
 // 		PWM : TIM_12-CH1 (PB14)
 // 		DIR : PD8
 // Motor 2 :
-// 		ENC : TIM_5
+// 		ENC : TIM_2
 // 		PWM : TIM_12-CH2 (PB15)
 // 		DIR : PB13
 // Motor 3 :
@@ -75,8 +77,8 @@ private:
 	int32_t continue_CNT = 0;
 	int16_t CNT = 0;
 
-	double Vnow = 0.;
-	double Vgoal = 0.;
+	double Vnow = 0.0;
+	double Vgoal = 0.0;
 
 	// PID controller
 	double I_lim = 1;

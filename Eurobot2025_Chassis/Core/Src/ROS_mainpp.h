@@ -16,7 +16,8 @@ void loop();
 void init();
 
 // Publisher
-void PubCarVnow();
+void PubCarVnow_Dead();
+void PubCarVnow_Driving();
 
 // Subscriber
 void GoalVel_CB(const geometry_msgs::Twist &msg);

@@ -14,6 +14,7 @@ C_SRCS += \
 
 CPP_SRCS += \
 ../Core/Src/DC_Motor.cpp \
+../Core/Src/Dead_Wheel.cpp \
 ../Core/Src/DebugMode.cpp \
 ../Core/Src/Omni.cpp \
 ../Core/Src/ROS_mainpp.cpp \
@@ -30,6 +31,7 @@ C_DEPS += \
 
 OBJS += \
 ./Core/Src/DC_Motor.o \
+./Core/Src/Dead_Wheel.o \
 ./Core/Src/DebugMode.o \
 ./Core/Src/Omni.o \
 ./Core/Src/ROS_mainpp.o \
@@ -44,6 +46,7 @@ OBJS += \
 
 CPP_DEPS += \
 ./Core/Src/DC_Motor.d \
+./Core/Src/Dead_Wheel.d \
 ./Core/Src/DebugMode.d \
 ./Core/Src/Omni.d \
 ./Core/Src/ROS_mainpp.d \
@@ -60,7 +63,7 @@ Core/Src/%.o Core/Src/%.su: ../Core/Src/%.c Core/Src/subdir.mk
 clean: clean-Core-2f-Src
 
 clean-Core-2f-Src:
-	-$(RM) ./Core/Src/DC_Motor.d ./Core/Src/DC_Motor.o ./Core/Src/DC_Motor.su ./Core/Src/DebugMode.d ./Core/Src/DebugMode.o ./Core/Src/DebugMode.su ./Core/Src/Omni.d ./Core/Src/Omni.o ./Core/Src/Omni.su ./Core/Src/ROS_mainpp.d ./Core/Src/ROS_mainpp.o ./Core/Src/ROS_mainpp.su ./Core/Src/function.d ./Core/Src/function.o ./Core/Src/function.su ./Core/Src/main.d ./Core/Src/main.o ./Core/Src/main.su ./Core/Src/mainpp.d ./Core/Src/mainpp.o ./Core/Src/mainpp.su ./Core/Src/stm32h7xx_hal_msp.d ./Core/Src/stm32h7xx_hal_msp.o ./Core/Src/stm32h7xx_hal_msp.su ./Core/Src/stm32h7xx_it.d ./Core/Src/stm32h7xx_it.o ./Core/Src/stm32h7xx_it.su ./Core/Src/syscalls.d ./Core/Src/syscalls.o ./Core/Src/syscalls.su ./Core/Src/sysmem.d ./Core/Src/sysmem.o ./Core/Src/sysmem.su ./Core/Src/system_stm32h7xx.d ./Core/Src/system_stm32h7xx.o ./Core/Src/system_stm32h7xx.su
+	-$(RM) ./Core/Src/DC_Motor.d ./Core/Src/DC_Motor.o ./Core/Src/DC_Motor.su ./Core/Src/Dead_Wheel.d ./Core/Src/Dead_Wheel.o ./Core/Src/Dead_Wheel.su ./Core/Src/DebugMode.d ./Core/Src/DebugMode.o ./Core/Src/DebugMode.su ./Core/Src/Omni.d ./Core/Src/Omni.o ./Core/Src/Omni.su ./Core/Src/ROS_mainpp.d ./Core/Src/ROS_mainpp.o ./Core/Src/ROS_mainpp.su ./Core/Src/function.d ./Core/Src/function.o ./Core/Src/function.su ./Core/Src/main.d ./Core/Src/main.o ./Core/Src/main.su ./Core/Src/mainpp.d ./Core/Src/mainpp.o ./Core/Src/mainpp.su ./Core/Src/stm32h7xx_hal_msp.d ./Core/Src/stm32h7xx_hal_msp.o ./Core/Src/stm32h7xx_hal_msp.su ./Core/Src/stm32h7xx_it.d ./Core/Src/stm32h7xx_it.o ./Core/Src/stm32h7xx_it.su ./Core/Src/syscalls.d ./Core/Src/syscalls.o ./Core/Src/syscalls.su ./Core/Src/sysmem.d ./Core/Src/sysmem.o ./Core/Src/sysmem.su ./Core/Src/system_stm32h7xx.d ./Core/Src/system_stm32h7xx.o ./Core/Src/system_stm32h7xx.su
 
 .PHONY: clean-Core-2f-Src
 

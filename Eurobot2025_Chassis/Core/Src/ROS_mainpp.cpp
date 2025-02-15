@@ -14,9 +14,13 @@ extern TIM_HandleTypeDef htim15;
 
 ros::NodeHandle nh;
 
-geometry_msgs::Twist CarVnow;
-static CAR_INFO NowCarInfo;
-static CAR_INFO NowCarLoc;
+geometry_msgs::Twist CarVnow_Dead;
+static CAR_INFO NowCarInfo_Dead;
+static CAR_INFO NowCarLoc_Dead;
+
+geometry_msgs::Twist CarVnow_Driving;
+static CAR_INFO NowCarInfo_Driving;
+static CAR_INFO NowCarLoc_Driving;
 
 ros::Subscriber<geometry_msgs::Twist> CarVelSub("cmd_vel", ROS::GoalVel_CB);
 ros::Subscriber<std_msgs::Bool> StartSub("/startornot", ROS::Start_CB);
@@ -28,7 +32,8 @@ ros::Subscriber<std_msgs::String> FinishSub("/mission0", ROS::Finish_CB);
 //ros::Subscriber<std_msgs::Float64> CarRadius_Sub("/STM_CarRadius", ROS::Test_CarRadius_CB);
 #endif
 
-ros::Publisher CarVelPub("Toposition", &CarVnow);
+ros::Publisher CarVelPub_Dead("Dead/Toposition", &CarVnow_Dead);
+ros::Publisher CarVelPub_Driving("Driving/Toposition", &CarVnow_Driving);
 
 void ROS::GoalVel_CB(const geometry_msgs::Twist &msg) {
 	omni.SetGoalCarInfo(msg.linear.x, msg.linear.y, msg.angular.z);
@@ -75,6 +80,7 @@ void ROS::Test_GetGoal_CB(const geometry_msgs::Pose &msg) {
 	}
 }
 
+// TODO: Modify CarRadius for short and long if using this function.
 void ROS::Test_CarRadius_CB(const std_msgs::Float64 &msg) {
 	CAR_RADIUS = msg.data;
 	DebugMode.UpdateCarConstant();
@@ -100,7 +106,8 @@ void ROS::setup() {
 	nh.subscribe(CarRadius_Sub);
 #endif
 
-	nh.advertise(CarVelPub);
+	nh.advertise(CarVelPub_Dead);
+	nh.advertise(CarVelPub_Driving);
 
 	HAL_TIM_Base_Start_IT(&htim7);
 }
@@ -109,19 +116,34 @@ void ROS::loop() {
 	nh.spinOnce();
 }
 
-void ROS::PubCarVnow() {
-	NowCarInfo = omni.GetNowCarInfo();
-	NowCarLoc = omni.GetNowCarLocation();
+void ROS::PubCarVnow_Dead() {
+	NowCarInfo_Dead = omni.GetNowCarInfo_Dead();
+	NowCarLoc_Dead = omni.GetNowCarLocation_Dead();
 
-	CarVnow.linear.x = NowCarInfo.Vx;
-	CarVnow.linear.y = NowCarInfo.Vy;
-	CarVnow.angular.z = NowCarInfo.Omega;
+	CarVnow_Dead.linear.x = NowCarInfo_Dead.Vx;
+	CarVnow_Dead.linear.y = NowCarInfo_Dead.Vy;
+	CarVnow_Dead.angular.z = NowCarInfo_Dead.Omega;
 
-	CarVnow.angular.x = NowCarLoc.Vx;
-	CarVnow.angular.y = NowCarLoc.Vy;
-	CarVnow.linear.z = NowCarLoc.Omega;
+	CarVnow_Dead.angular.x = NowCarLoc_Dead.Vx;
+	CarVnow_Dead.angular.y = NowCarLoc_Dead.Vy;
+	CarVnow_Dead.linear.z = NowCarLoc_Dead.Omega;
 
-	CarVelPub.publish(&CarVnow);
+	CarVelPub_Dead.publish(&CarVnow_Dead);
+}
+
+void ROS::PubCarVnow_Driving() {
+	NowCarInfo_Driving = omni.GetNowCarInfo_Driving();
+	NowCarLoc_Driving = omni.GetNowCarLocation_Driving();
+
+	CarVnow_Driving.linear.x = NowCarInfo_Driving.Vx;
+	CarVnow_Driving.linear.y = NowCarInfo_Driving.Vy;
+	CarVnow_Driving.angular.z = NowCarInfo_Driving.Omega;
+
+	CarVnow_Driving.angular.x = NowCarLoc_Driving.Vx;
+	CarVnow_Driving.angular.y = NowCarLoc_Driving.Vy;
+	CarVnow_Driving.linear.z = NowCarLoc_Driving.Omega;
+
+	CarVelPub_Driving.publish(&CarVnow_Driving);
 }
 
 void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart) {

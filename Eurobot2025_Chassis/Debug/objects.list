@@ -1,6 +1,7 @@
 "./Core/Inc/duration.o"
 "./Core/Inc/time.o"
 "./Core/Src/DC_Motor.o"
+"./Core/Src/Dead_Wheel.o"
 "./Core/Src/DebugMode.o"
 "./Core/Src/Omni.o"
 "./Core/Src/ROS_mainpp.o"

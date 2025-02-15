@@ -2,17 +2,21 @@
 #define OMNI_H
 
 #include "DC_Motor.h"
+#include "Dead_Wheel.h"
 #include "ROS_mainpp.h"
-
-#define omni_angle 0.62465335
-#define angle_cos 0.624
-#define angle_sin 0.62465335
 
 typedef struct {
 	double Vx = 0.0;
 	double Vy = 0.0;
 	double Omega = 0.0;
 } CAR_INFO;
+
+// TODO: Modify for new car
+typedef struct {
+	double Short = 0.104; // For Driving Wheel
+	double Long = 0.131;  // For Driving Wheel
+	double Sq = 0.115258; // For Dead Wheel
+} CAR_DIMENSION;
 
 // Omni control
 class Omni {
@@ -22,13 +26,16 @@ public:
 	// Initialize each motor settings.
 	void Init();
 
-	// Update each motor's Vnow and calculate NowCarInfo
-	void UpdateNowCarInfo();
+	// Update each motor's Vnow, Calculate car's Vnow & intergral location with dead wheel encoder.
+	void UpdateNowCarInfo_Dead();
+	void UpdateCarLocation_Dead();
+
+	// Update each motor's Vnow, Calculate car's Vnow & intergral location with driving wheel encoder.
+	void UpdateNowCarInfo_Driving();
+	void UpdateCarLocation_Driving();
 
 	// Set GoalCarInfo and Update each motor Vgoal.
 	void SetGoalCarInfo(double Vx, double Vy, double Omega);
-
-	void UpdateCarLocation();
 
 	// Update each motor's PID value and set PWM.
 	void Update_PID();
@@ -36,14 +43,18 @@ public:
 	// Move the car
 	void Move();
 
-	void SetCarRadius(double CarRadius);
+	void SetCarRadius(CAR_DIMENSION CarRadius);
 
 	// Debug from Live Expressions
 	void SetMotorVgoal();
 
-	CAR_INFO GetNowCarInfo();
+	// Get car's Vnow & intergral location with dead wheel encoder.
+	CAR_INFO GetNowCarInfo_Dead();
+	CAR_INFO GetNowCarLocation_Dead();
 
-	CAR_INFO GetNowCarLocation();
+	// Get car's Vnow & intergral location with driving wheel encoder.
+	CAR_INFO GetNowCarInfo_Driving();
+	CAR_INFO GetNowCarLocation_Driving();
 
 	// Vgoal
 	CAR_INFO GoalCarInfo;
@@ -52,21 +63,29 @@ private:
 
 	// Get each motors' V_now
 	void UpdateMotorVnow();
+	// Get each encoder's V_now
+	void UpdateEncoderVnow();
 
 	DC_Motor::Motor motors[4];
+	Dead_Wheel::Encoder encoders[4];
 
-	// Vnow
-	CAR_INFO NowCarInfo;
+	// Vnow & intergral location with dead wheel encoder.
+	CAR_INFO NowCarInfo_Dead;
+	CAR_INFO NowCarLocation_Dead;
+
+	// Vnow & intergral location with driving wheel encoder.
+	CAR_INFO NowCarInfo_Driving;
+	CAR_INFO NowCarLocation_Driving;
 
 	// Vgoal
 //	CAR_INFO GoalCarInfo;
 
-	CAR_INFO NowCarLocation;
 
-	double CarRadius;
+	// Car Radius
+	CAR_DIMENSION CarRadius_;
 };
 
-extern double CAR_RADIUS;
+extern CAR_DIMENSION CAR_RADIUS;
 extern Omni omni;
 
 #endif /* OMNI_H */

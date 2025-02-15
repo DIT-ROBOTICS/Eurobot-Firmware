@@ -21,8 +21,13 @@ static int ROS_CAR_FREQUENCY = 0;
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 	if (htim->Instance == TIM13) {
-		// Update Car Vnow
-		omni.UpdateNowCarInfo();
+		// Update car Vnow & intergral location with dead wheel encoder.
+		omni.UpdateNowCarInfo_Dead();
+		omni.UpdateCarLocation_Dead();
+
+		// Update car Vnow & intergral location with driving wheel encoder.
+		omni.UpdateNowCarInfo_Driving();
+		omni.UpdateCarLocation_Driving();
 
 		// Update four wheel's PID value.
 		omni.Update_PID();
@@ -34,12 +39,12 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 		omni.SetMotorVgoal();
 //		omni.SetGoalCarInfo(Vx_goal,Vy_goal,Vz_goal);]
 
-		omni.UpdateCarLocation();
 
 		// ROS pub -> Mecanum
 		if (++ROS_CAR_FREQUENCY >= ROS_CAR_PUB_FREQUENCY) {
 			ROS_CAR_FREQUENCY = 0;
-			ROS::PubCarVnow();
+			ROS::PubCarVnow_Dead();
+			ROS::PubCarVnow_Driving();
 		}
 	}
 	else if (htim->Instance == TIM7) {

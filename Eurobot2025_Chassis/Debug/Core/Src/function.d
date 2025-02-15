@@ -36,7 +36,8 @@ Core/Src/function.o: ../Core/Src/function.cpp ../Core/Src/function.h \
  ../Core/Inc/geometry_msgs/Quaternion.h ../Core/Inc/geometry_msgs/Twist.h \
  ../Core/Inc/geometry_msgs/Vector3.h ../Core/Inc/std_msgs/Float64.h \
  ../Core/Inc/std_msgs/String.h ../Core/Inc/std_msgs/Bool.h \
- ../Core/Src/DebugMode.h ../Core/Src/Omni.h ../Core/Src/DC_Motor.h
+ ../Core/Src/DebugMode.h ../Core/Src/Omni.h ../Core/Src/DC_Motor.h \
+ ../Core/Src/Dead_Wheel.h
 ../Core/Src/function.h:
 ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h:
 ../Core/Inc/stm32h7xx_hal_conf.h:
@@ -83,3 +84,4 @@ Core/Src/function.o: ../Core/Src/function.cpp ../Core/Src/function.h \
 ../Core/Src/DebugMode.h:
 ../Core/Src/Omni.h:
 ../Core/Src/DC_Motor.h:
+../Core/Src/Dead_Wheel.h:

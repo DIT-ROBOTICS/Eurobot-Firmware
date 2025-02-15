@@ -18,7 +18,7 @@ namespace DC_Motor {
 
 double WheelRadius = 0.024;
 double ROUND = 2 * WheelRadius * 3.14159;
-double CONST_FOR_MOTOR[4] = { ROUND / RES_Ratio, -ROUND / RES_Ratio, ROUND / RES_Ratio, -ROUND / RES_Ratio };
+double CONST_FOR_MOTOR[4] = { ROUND / RES_Ratio_Driving, -ROUND / RES_Ratio_Driving, ROUND / RES_Ratio_Driving, -ROUND / RES_Ratio_Driving };
 
 void Init() {
 	// Init interrupt for reading encoder's CNT

@@ -44,7 +44,7 @@ Core/Src/ROS_mainpp.o: ../Core/Src/ROS_mainpp.cpp \
  ../Core/Inc/ros/node_handle.h ../Core/Inc/ros/subscriber.h \
  ../Core/Inc/ros/service_server.h ../Core/Inc/ros/service_client.h \
  ../Core/Inc/STM32Hardware.h ../Core/Src/DebugMode.h ../Core/Src/Omni.h \
- ../Core/Src/DC_Motor.h
+ ../Core/Src/DC_Motor.h ../Core/Src/Dead_Wheel.h
 ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h:
 ../Core/Inc/stm32h7xx_hal_conf.h:
 ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_rcc.h:
@@ -104,3 +104,4 @@ Core/Src/ROS_mainpp.o: ../Core/Src/ROS_mainpp.cpp \
 ../Core/Src/DebugMode.h:
 ../Core/Src/Omni.h:
 ../Core/Src/DC_Motor.h:
+../Core/Src/Dead_Wheel.h:
