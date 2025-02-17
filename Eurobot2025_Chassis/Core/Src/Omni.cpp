@@ -94,9 +94,10 @@ void Omni::UpdateNowCarInfo_Driving() {
 	// Unit : m/s , rad/s
 	this->UpdateMotorVnow();
 
-	NowCarInfo_Driving.Vx = (-motors[1].GetVnow() + motors[3].GetVnow())/(2.0);
-	NowCarInfo_Driving.Vy = (motors[0].GetVnow() - motors[2].GetVnow())/(2.0);
-	NowCarInfo_Driving.Omega = ((motors[0].GetVnow() +  motors[2].GetVnow())/(2.0*CarRadius_.Short) + (motors[1].GetVnow() + motors[3].GetVnow())/(2.0*CarRadius_.Long))/2.0;
+	NowCarInfo_Driving.Vx = (-motors[1].GetVnow() + motors[3].GetVnow()) / (2.0);
+	NowCarInfo_Driving.Vy = (motors[0].GetVnow() - motors[2].GetVnow()) / (2.0);
+	NowCarInfo_Driving.Omega = ((motors[0].GetVnow() +  motors[2].GetVnow()) / (2.0 * CarRadius_.Short)
+		+ (motors[1].GetVnow() + motors[3].GetVnow())/(2.0 * CarRadius_.Long)) / 2.0;
 }
 void Omni::UpdateCarLocation_Driving() {
 	double m[4];
@@ -105,7 +106,7 @@ void Omni::UpdateCarLocation_Driving() {
 	}
 	NowCarLocation_Driving.Vx += (-m[1] + m[3])/(2.0);
 	NowCarLocation_Driving.Vy += (m[0] - m[2])/(2.0);
-	NowCarLocation_Driving.Omega += ((m[0] +  m[2])/(2.0*CarRadius_.Short) + (m[1] + m[3])/(2.0*CarRadius_.Long))/2.0;
+	NowCarLocation_Driving.Omega += ((m[0] +  m[2])/(2.0 * CarRadius_.Short) + (m[1] + m[3]) / (2.0 * CarRadius_.Long)) / 2.0;
 }
 
 // Set all motors' velocity base on Car Vgoal.
