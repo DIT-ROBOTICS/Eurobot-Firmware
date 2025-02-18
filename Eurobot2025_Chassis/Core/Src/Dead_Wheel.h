@@ -6,8 +6,8 @@
 // Timer for reading encoder CNT : 1k Hz
 #define COUNT_TIME 0.001
 
-// 4 * Resolution(500) * GearBox(1) * CountTime
-#define RES_Ratio_Dead 2
+// 4 * Resolution(2000) * GearBox(1) * CountTime
+#define RES_Ratio_Dead 8
 
 // Encoder 1 :
 // 		ENC : TIM_5
