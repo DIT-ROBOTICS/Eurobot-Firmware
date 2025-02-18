@@ -32,8 +32,8 @@ ros::Subscriber<std_msgs::String> FinishSub("/mission0", ROS::Finish_CB);
 //ros::Subscriber<std_msgs::Float64> CarRadius_Sub("/STM_CarRadius", ROS::Test_CarRadius_CB);
 #endif
 
-ros::Publisher CarVelPub_Dead("Dead/Toposition", &CarVnow_Dead);
-ros::Publisher CarVelPub_Driving("Driving/Toposition", &CarVnow_Driving);
+ros::Publisher CarVelPub_Dead("odoo_googoogoo", &CarVnow_Dead);
+ros::Publisher CarVelPub_Driving("driving_duaiduaiduai", &CarVnow_Driving);
 
 void ROS::GoalVel_CB(const geometry_msgs::Twist &msg) {
 	omni.SetGoalCarInfo(msg.linear.x, msg.linear.y, msg.angular.z);
