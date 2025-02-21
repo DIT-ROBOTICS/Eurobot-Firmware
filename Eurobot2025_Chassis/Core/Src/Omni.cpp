@@ -104,9 +104,9 @@ void Omni::UpdateCarLocation_Driving() {
 	for (int i = 0; i < 4; i++) {
 		m[i] = this->motors[i].MoveDis() / 1000.0;
 	}
-	NowCarLocation_Driving.Vx += (-m[1] + m[3])/(2.0);
-	NowCarLocation_Driving.Vy += (m[0] - m[2])/(2.0);
-	NowCarLocation_Driving.Omega += ((m[0] +  m[2])/(2.0 * CarRadius_.Short) + (m[1] + m[3]) / (2.0 * CarRadius_.Long)) / 2.0;
+	NowCarLocation_Driving.Vx += (-m[1] + m[3]) / (2.0);
+	NowCarLocation_Driving.Vy += (m[0] - m[2]) / (2.0);
+	NowCarLocation_Driving.Omega += ((m[0] +  m[2]) / (2.0 * CarRadius_.Short) + (m[1] + m[3]) / (2.0 * CarRadius_.Long)) / 2.0;
 }
 
 // Set all motors' velocity base on Car Vgoal.
