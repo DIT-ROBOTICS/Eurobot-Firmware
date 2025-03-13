@@ -7,6 +7,16 @@
 #include "Omni.h"
 
 // For ROS::loop
+extern TIM_HandleTypeDef htim1;
+extern TIM_HandleTypeDef htim2;
+extern TIM_HandleTypeDef htim3;
+extern TIM_HandleTypeDef htim4;
+
+extern TIM_HandleTypeDef htim5;
+extern TIM_HandleTypeDef htim8;
+extern TIM_HandleTypeDef htim23;
+extern TIM_HandleTypeDef htim24;
+
 extern TIM_HandleTypeDef htim7;
 extern TIM_HandleTypeDef htim12;
 extern TIM_HandleTypeDef htim13;
@@ -115,6 +125,11 @@ void ROS::setup() {
 void ROS::loop() {
 	nh.spinOnce();
 }
+// int i = 0;
+// double MotorVnow_0[1000];
+// double MotorVnow_1[1000];
+// double MotorVnow_2[1000];
+// double MotorVnow_3[1000];
 
 void ROS::PubCarVnow_Dead() {
 	NowCarInfo_Dead = omni.GetNowCarInfo_Dead();
@@ -127,6 +142,30 @@ void ROS::PubCarVnow_Dead() {
 	CarVnow_Dead.angular.x = NowCarLoc_Dead.Vx;
 	CarVnow_Dead.angular.y = NowCarLoc_Dead.Vy;
 	CarVnow_Dead.linear.z = NowCarLoc_Dead.Omega;
+
+//	CarVnow_Dead.linear.x = omni.GetMotorVnow(0);
+//	CarVnow_Dead.linear.y = omni.GetMotorVnow(1);
+//	CarVnow_Dead.angular.z = omni.GetMotorVnow(2);
+//
+//	CarVnow_Dead.angular.x = omni.GetMotorVnow(3);
+//	CarVnow_Dead.angular.y = NowCarLoc_Dead.Vy;
+//	CarVnow_Dead.linear.z = NowCarLoc_Dead.Omega;
+
+//	if(i<1000){
+//		MotorVnow_0[i] = omni.GetMotorVnow(0);
+//		MotorVnow_1[i] = omni.GetMotorVnow(1);
+//		MotorVnow_2[i] = omni.GetMotorVnow(2);
+//		MotorVnow_3[i] = omni.GetMotorVnow(3);
+//	}
+//	if(omni.GoalCarInfo.Vx != 0 || omni.GoalCarInfo.Vy != 0)	i++;
+
+//	CarVnow_Dead.linear.x = TIM5->CNT;
+//	CarVnow_Dead.linear.y = TIM8->CNT;
+//	CarVnow_Dead.angular.z = TIM23->CNT;
+//
+//	CarVnow_Dead.angular.x = TIM24->CNT;
+//	CarVnow_Dead.angular.y = NowCarLoc_Dead.Vy;
+//	CarVnow_Dead.linear.z = NowCarLoc_Dead.Omega;
 
 	CarVelPub_Dead.publish(&CarVnow_Dead);
 }

@@ -3,11 +3,11 @@
 
 #include "stm32h7xx_hal.h"
 
-// Timer for reading encoder CNT : 1k Hz
-#define COUNT_TIME 0.001
+// Timer for reading encoder CNT : 0.5k Hz
+#define COUNT_TIME_DEAD 0.002
 
-// 4 * Resolution(2000) * GearBox(1) * CountTime
-#define RES_Ratio_Dead 8
+// 4 * Resolution(500) * GearBox(1) * CountTime
+#define RES_Ratio_Dead 4
 
 // Encoder 1 :
 // 		ENC : TIM_5

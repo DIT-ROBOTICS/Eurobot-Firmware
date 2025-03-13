@@ -34,6 +34,8 @@ public:
 	void UpdateNowCarInfo_Driving();
 	void UpdateCarLocation_Driving();
 
+	double GetMotorVnow(int index);
+
 	// Set GoalCarInfo and Update each motor Vgoal.
 	void SetGoalCarInfo(double Vx, double Vy, double Omega);
 

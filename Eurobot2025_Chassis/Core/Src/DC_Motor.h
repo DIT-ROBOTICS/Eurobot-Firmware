@@ -9,7 +9,7 @@
 // Car Radius Short : 0.104 m
 // Car Radius Long : 0.131 m
 // Timer for reading encoder CNT : 1k Hz
-#define COUNT_TIME 0.001
+#define COUNT_TIME_DRIVING 0.001
 
 // 4 * Resolution * GearBox * CountTime
 #define RES_Ratio_Driving 90.112
@@ -102,8 +102,8 @@ private:
  * */
 void Init();
 
-extern double WheelRadius;
-extern double ROUND;
+extern double WheelRadius[4];
+extern double ROUND[4];
 extern double CONST_FOR_MOTOR[4];
 
 }

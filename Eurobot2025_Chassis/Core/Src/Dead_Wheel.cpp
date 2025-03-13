@@ -1,6 +1,9 @@
 # include "stm32h7xx_hal.h"
 # include "Dead_Wheel.h"
 
+// Timer Interrupt
+extern TIM_HandleTypeDef htim16;
+
 // Encoder
 extern TIM_HandleTypeDef htim1;
 extern TIM_HandleTypeDef htim2;
@@ -12,10 +15,11 @@ namespace Dead_Wheel {
 // TODO: Check for data
 double WheelRadius[4] = {0.0164207, 0.01625, 0.0165633, 0.0161001};
 double ROUND[4] = {2 * WheelRadius[0] * 3.14159, 2 * WheelRadius[1] * 3.14159, 2 * WheelRadius[2] * 3.14159, 2 * WheelRadius[3] * 3.14159};
-double CONST_FOR_ENCODER[4] = { -ROUND[0] / RES_Ratio_Dead, ROUND[1] / RES_Ratio_Dead, ROUND[2] / RES_Ratio_Dead, -ROUND[3] / RES_Ratio_Dead };
+double CONST_FOR_ENCODER[4] = { ROUND[0] / RES_Ratio_Dead, -ROUND[1] / RES_Ratio_Dead, ROUND[2] / RES_Ratio_Dead, -ROUND[3] / RES_Ratio_Dead };
 
 void Init() {
-    // Interrupt for reading encoder's CNT has been started in DC_Motor::Init()
+	// Init interrupt for reading encoder's CNT
+	HAL_TIM_Base_Start_IT(&htim16);
 
     // Init Encoder
     HAL_TIM_Encoder_Start(&htim1, TIM_CHANNEL_ALL);  // Encoder[0]

@@ -48,23 +48,23 @@ void Omni::Init() {
 // TODO: Check for kinematics - wheel to robot
 // TODO: Modify encoder use
 // ------------------------
-//	     1    x    \               
+//	     0    x    \
 //	    /-----|-----\            
-//	   / |    |    | 0          
+//	   / |    |    | 1
 //	     |    |    |               
 //	   y-------    |           
 //	     |         |            
-//	   2 |         | /            
+//	   3 |         | /
 //	    \-----------/            
-//	     \         3              
+//	     \         2
 // ------------------------
 void Omni::UpdateNowCarInfo_Dead() {
 	// Get each encoders' Vnow
 	// Unit : m/s , rad/s
 	this->UpdateEncoderVnow();
 
-	NowCarInfo_Dead.Vx = sqrt(2) * (encoders[0].GetVnow() - encoders[1].GetVnow()
-		- encoders[2].GetVnow() + encoders[3].GetVnow()) / 4.0;
+	NowCarInfo_Dead.Vx = sqrt(2) * (-encoders[0].GetVnow() + encoders[1].GetVnow()
+		+ encoders[2].GetVnow() - encoders[3].GetVnow()) / 4.0;
 	NowCarInfo_Dead.Vy = sqrt(2) * (encoders[0].GetVnow() + encoders[1].GetVnow()
 		- encoders[2].GetVnow() - encoders[3].GetVnow()) / 4.0;
 	NowCarInfo_Dead.Omega = (encoders[0].GetVnow() + encoders[1].GetVnow()
@@ -75,7 +75,7 @@ void Omni::UpdateCarLocation_Dead() {
 	for (int i = 0; i < 4; i++) {
 		e[i] = this->encoders[i].MoveDis() / 1000.0;
 	}
-	NowCarLocation_Dead.Vx += sqrt(2) * (e[0] - e[1] - e[2] + e[3]) / 4.0;
+	NowCarLocation_Dead.Vx += sqrt(2) * (-e[0] + e[1] + e[2] - e[3]) / 4.0;
 	NowCarLocation_Dead.Vy += sqrt(2) * (e[0] + e[1] - e[2] - e[3]) / 4.0;
 	NowCarLocation_Dead.Omega += (e[0] + e[1] + e[2] + e[3]) / (CarRadius_.Sq * 4.0);
 }
@@ -85,7 +85,7 @@ void Omni::UpdateCarLocation_Dead() {
 // ------------------------
 // 		-----0-----
 // 		|         |
-// 		1         3
+// 		3         1
 // 		|         |
 // 		-----2-----
 // ------------------------
@@ -94,19 +94,23 @@ void Omni::UpdateNowCarInfo_Driving() {
 	// Unit : m/s , rad/s
 	this->UpdateMotorVnow();
 
-	NowCarInfo_Driving.Vx = (-motors[1].GetVnow() + motors[3].GetVnow()) / (2.0);
+	NowCarInfo_Driving.Vx = (motors[1].GetVnow() - motors[3].GetVnow()) / (2.0);
 	NowCarInfo_Driving.Vy = (motors[0].GetVnow() - motors[2].GetVnow()) / (2.0);
-	NowCarInfo_Driving.Omega = ((motors[0].GetVnow() +  motors[2].GetVnow()) / (2.0 * CarRadius_.Short)
-		+ (motors[1].GetVnow() + motors[3].GetVnow())/(2.0 * CarRadius_.Long)) / 2.0;
+	NowCarInfo_Driving.Omega = ((motors[0].GetVnow() - motors[2].GetVnow()) / (2.0 * CarRadius_.Short)
+		+ (motors[1].GetVnow() - motors[3].GetVnow())/(2.0 * CarRadius_.Long)) / 2.0;
 }
 void Omni::UpdateCarLocation_Driving() {
 	double m[4];
 	for (int i = 0; i < 4; i++) {
 		m[i] = this->motors[i].MoveDis() / 1000.0;
 	}
-	NowCarLocation_Driving.Vx += (-m[1] + m[3]) / (2.0);
+	NowCarLocation_Driving.Vx += (m[1] - m[3]) / (2.0);
 	NowCarLocation_Driving.Vy += (m[0] - m[2]) / (2.0);
-	NowCarLocation_Driving.Omega += ((m[0] +  m[2]) / (2.0 * CarRadius_.Short) + (m[1] + m[3]) / (2.0 * CarRadius_.Long)) / 2.0;
+	NowCarLocation_Driving.Omega += ((m[0] -  m[2]) / (2.0 * CarRadius_.Short) + (m[1] - m[3]) / (2.0 * CarRadius_.Long)) / 2.0;
+}
+
+double Omni::GetMotorVnow(int index) {
+	return motors[index].GetVnow();
 }
 
 // Set all motors' velocity base on Car Vgoal.
@@ -139,8 +143,8 @@ void Omni::UpdateEncoderVnow() {
 // TODO : Check for the DIR
 void Omni::Move() {
 	// DIR
-	HAL_GPIO_WritePin(GPIOD, GPIO_PIN_8, (motors[0].u > 0) ? GPIO_PIN_RESET : GPIO_PIN_SET);
-	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_13, (motors[1].u > 0) ? GPIO_PIN_SET : GPIO_PIN_RESET);
+	HAL_GPIO_WritePin(GPIOD, GPIO_PIN_8, (motors[0].u > 0) ? GPIO_PIN_SET : GPIO_PIN_RESET);
+	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_13, (motors[1].u > 0) ? GPIO_PIN_RESET : GPIO_PIN_SET);
 	HAL_GPIO_WritePin(GPIOE, GPIO_PIN_3, (motors[2].u > 0) ? GPIO_PIN_RESET : GPIO_PIN_SET);
 	HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, (motors[3].u > 0) ? GPIO_PIN_SET : GPIO_PIN_RESET);
 
@@ -161,10 +165,10 @@ void Omni::Move() {
 // ------------------------
 void Omni::SetMotorVgoal() {
 	// Unit : m/s
-	this->motors[0].SetVgoal(GoalCarInfo.Vy + CarRadius_.Short * GoalCarInfo.Omega);
-	this->motors[1].SetVgoal(-GoalCarInfo.Vx + CarRadius_.Long * GoalCarInfo.Omega);
-	this->motors[2].SetVgoal(-GoalCarInfo.Vy + CarRadius_.Short * GoalCarInfo.Omega);
-	this->motors[3].SetVgoal(GoalCarInfo.Vx + CarRadius_.Long * GoalCarInfo.Omega);
+	this->motors[0].SetVgoal((GoalCarInfo.Vy + CarRadius_.Short * GoalCarInfo.Omega));
+	this->motors[1].SetVgoal((GoalCarInfo.Vx + CarRadius_.Long * GoalCarInfo.Omega));
+	this->motors[2].SetVgoal((-GoalCarInfo.Vy + CarRadius_.Short * GoalCarInfo.Omega));
+	this->motors[3].SetVgoal((-GoalCarInfo.Vx + CarRadius_.Long * GoalCarInfo.Omega));
 }
 
 // ** Dead Wheel Encoder **

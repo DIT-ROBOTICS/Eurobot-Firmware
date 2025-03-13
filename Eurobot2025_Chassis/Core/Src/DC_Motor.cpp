@@ -15,10 +15,9 @@ extern TIM_HandleTypeDef htim23;
 extern TIM_HandleTypeDef htim24;
 
 namespace DC_Motor {
-
-double WheelRadius = 0.024;
-double ROUND = 2 * WheelRadius * 3.14159;
-double CONST_FOR_MOTOR[4] = { ROUND / RES_Ratio_Driving, -ROUND / RES_Ratio_Driving, ROUND / RES_Ratio_Driving, -ROUND / RES_Ratio_Driving };
+double WheelRadius[4] = {0.024, 0.024, 0.024, 0.024};
+double ROUND[4] = {2 * WheelRadius[0] * 3.14159, 2 * WheelRadius[1] * 3.14159, 2 * WheelRadius[2] * 3.14159, 2 * WheelRadius[3] * 3.14159};
+double CONST_FOR_MOTOR[4] = {-ROUND[0] / RES_Ratio_Driving, ROUND[1] / RES_Ratio_Driving, ROUND[2] / RES_Ratio_Driving, -ROUND[3] / RES_Ratio_Driving};
 
 void Init() {
 	// Init interrupt for reading encoder's CNT
@@ -57,7 +56,7 @@ void Motor::UpdatePI() {
 	p = this->P * this->error;
 
 	// Count I
-	this->i += this->I * this->error * COUNT_TIME;
+	this->i += this->I * this->error * COUNT_TIME_DRIVING;
 
 	// Limit I in range
 	if (this->i > this->I_lim)

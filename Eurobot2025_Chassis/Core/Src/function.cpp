@@ -17,14 +17,11 @@ extern TIM_HandleTypeDef htim7;
 
 
 // Count ROS frequency.
-static int ROS_CAR_FREQUENCY = 0;
+static int ROS_CAR_FREQUENCY_Driving = 0;
+static int ROS_CAR_FREQUENCY_Dead = 0;
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 	if (htim->Instance == TIM13) {
-		// Update car Vnow & intergral location with dead wheel encoder.
-		omni.UpdateNowCarInfo_Dead();
-		omni.UpdateCarLocation_Dead();
-
 		// Update car Vnow & intergral location with driving wheel encoder.
 		omni.UpdateNowCarInfo_Driving();
 		omni.UpdateCarLocation_Driving();
@@ -40,11 +37,21 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 //		omni.SetGoalCarInfo(Vx_goal,Vy_goal,Vz_goal);]
 
 
-		// ROS pub -> Mecanum
-		if (++ROS_CAR_FREQUENCY >= ROS_CAR_PUB_FREQUENCY) {
-			ROS_CAR_FREQUENCY = 0;
-			ROS::PubCarVnow_Dead();
+		// ROS pub
+		if (++ROS_CAR_FREQUENCY_Driving >= ROS_CAR_PUB_FREQUENCY) {
+			ROS_CAR_FREQUENCY_Driving = 0;
 			ROS::PubCarVnow_Driving();
+		}
+	}
+	else if(htim->Instance == TIM16) {
+		// Update car Vnow & intergral location with dead wheel encoder.
+		omni.UpdateNowCarInfo_Dead();
+		omni.UpdateCarLocation_Dead();
+
+		// ROS pub
+		if (++ROS_CAR_FREQUENCY_Dead >= ROS_CAR_PUB_FREQUENCY) {
+			ROS_CAR_FREQUENCY_Dead = 0;
+			ROS::PubCarVnow_Dead();
 		}
 	}
 	else if (htim->Instance == TIM7) {
