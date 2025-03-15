@@ -62,12 +62,12 @@ void Omni::UpdateNowCarInfo_Dead() {
 	// Get each encoders' Vnow
 	// Unit : m/s , rad/s
 	this->UpdateEncoderVnow();
-
-	NowCarInfo_Dead.Vx = sqrt(2) * (-encoders[0].GetVnow() + encoders[1].GetVnow()
+	double compensation[3] = {1.38, 1.36, 1.25};
+	NowCarInfo_Dead.Vx = compensation[0] * sqrt(2) * (-encoders[0].GetVnow() + encoders[1].GetVnow()
 		+ encoders[2].GetVnow() - encoders[3].GetVnow()) / 4.0;
-	NowCarInfo_Dead.Vy = sqrt(2) * (encoders[0].GetVnow() + encoders[1].GetVnow()
+	NowCarInfo_Dead.Vy = compensation[1] * sqrt(2) * (encoders[0].GetVnow() + encoders[1].GetVnow()
 		- encoders[2].GetVnow() - encoders[3].GetVnow()) / 4.0;
-	NowCarInfo_Dead.Omega = (encoders[0].GetVnow() + encoders[1].GetVnow()
+	NowCarInfo_Dead.Omega = compensation[2] * (encoders[0].GetVnow() + encoders[1].GetVnow()
 		+ encoders[2].GetVnow() + encoders[3].GetVnow()) / (CarRadius_.Sq * 4.0);
 }
 void Omni::UpdateCarLocation_Dead() {
@@ -75,9 +75,10 @@ void Omni::UpdateCarLocation_Dead() {
 	for (int i = 0; i < 4; i++) {
 		e[i] = this->encoders[i].MoveDis() / 1000.0;
 	}
-	NowCarLocation_Dead.Vx += sqrt(2) * (-e[0] + e[1] + e[2] - e[3]) / 4.0;
-	NowCarLocation_Dead.Vy += sqrt(2) * (e[0] + e[1] - e[2] - e[3]) / 4.0;
-	NowCarLocation_Dead.Omega += (e[0] + e[1] + e[2] + e[3]) / (CarRadius_.Sq * 4.0);
+	double compensation[3] = {4.0, 4.0, 4.0};
+	NowCarLocation_Dead.Vx += compensation[0] * sqrt(2) * (-e[0] + e[1] + e[2] - e[3]) / 4.0;
+	NowCarLocation_Dead.Vy += compensation[1] * sqrt(2) * (e[0] + e[1] - e[2] - e[3]) / 4.0;
+	NowCarLocation_Dead.Omega += compensation[2] * (e[0] + e[1] + e[2] + e[3]) / (CarRadius_.Sq * 4.0);
 }
 
 // ** Driving Wheel Encoder **
@@ -96,8 +97,8 @@ void Omni::UpdateNowCarInfo_Driving() {
 
 	NowCarInfo_Driving.Vx = (motors[1].GetVnow() - motors[3].GetVnow()) / (2.0);
 	NowCarInfo_Driving.Vy = (motors[0].GetVnow() - motors[2].GetVnow()) / (2.0);
-	NowCarInfo_Driving.Omega = ((motors[0].GetVnow() - motors[2].GetVnow()) / (2.0 * CarRadius_.Short)
-		+ (motors[1].GetVnow() - motors[3].GetVnow())/(2.0 * CarRadius_.Long)) / 2.0;
+	NowCarInfo_Driving.Omega = ((motors[0].GetVnow() + motors[2].GetVnow()) / (2.0 * CarRadius_.Short)
+		+ (motors[1].GetVnow() + motors[3].GetVnow())/(2.0 * CarRadius_.Long)) / 2.0;
 }
 void Omni::UpdateCarLocation_Driving() {
 	double m[4];
@@ -106,7 +107,7 @@ void Omni::UpdateCarLocation_Driving() {
 	}
 	NowCarLocation_Driving.Vx += (m[1] - m[3]) / (2.0);
 	NowCarLocation_Driving.Vy += (m[0] - m[2]) / (2.0);
-	NowCarLocation_Driving.Omega += ((m[0] -  m[2]) / (2.0 * CarRadius_.Short) + (m[1] - m[3]) / (2.0 * CarRadius_.Long)) / 2.0;
+	NowCarLocation_Driving.Omega += ((m[0] +  m[2]) / (2.0 * CarRadius_.Short) + (m[1] + m[3]) / (2.0 * CarRadius_.Long)) / 2.0;
 }
 
 double Omni::GetMotorVnow(int index) {
