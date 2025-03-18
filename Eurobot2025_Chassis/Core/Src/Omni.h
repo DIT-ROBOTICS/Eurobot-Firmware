@@ -11,7 +11,7 @@ typedef struct {
 	double Omega = 0.0;
 } CAR_INFO;
 
-// TODO: Modify for new car
+// TODO: Modify for new car - 11
 typedef struct {
 	double Short = 0.104; // For Driving Wheel
 	double Long = 0.131;  // For Driving Wheel
