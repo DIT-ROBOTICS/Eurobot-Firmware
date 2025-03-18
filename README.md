@@ -3,7 +3,7 @@
 The STM firmware for DIT Eurobot2025 Chassis
 
 ## Overview
-This firmware is designed for the omni-directional chassis of the DIT Eurobot2025-12 robot. It manages motion control and communication with external systems, including ROS via rosserial.
+This firmware is designed for the omni-directional chassis of the DIT Eurobot2025-14 robot. It manages motion control and communication with external systems, including ROS via rosserial.
 
 ## Important Notes
 If you need to modify the `.ioc` file, ensure that the function call `MX_DMA_Init();` is placed **before** `MX_USART1_UART_Init();` in `main.c`. This is necessary for establishing proper `rosserial` communication.
