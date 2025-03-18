@@ -11,17 +11,9 @@ If you need to modify the `.ioc` file, ensure that the function call `MX_DMA_Ini
 ## Getting Started
 ### Prerequisites
 - STM32CubeIDE
-- STM32 Hardware (compatible with Eurobot2025 chassis)
-- ROS with `rosserial` package
-
-### Compilation & Flashing
-1. Open the project in **STM32CubeIDE**.
-2. Ensure the correct microcontroller is selected in the `.ioc` file.
-3. Build the project and flash it to the STM32.
-
-### ROS Integration
-1. Connect the STM32 via UART to the ROS host machine.
-2. Run the `rosserial` node to establish communication.
+- DIT Eurobot2025 chassis MCU PCB
+- odometry wheel * 4
+- motor with encoder * 4
 
 ## License
 This firmware is developed for DIT Eurobot2025 and follows the applicable open-source licensing guidelines.
