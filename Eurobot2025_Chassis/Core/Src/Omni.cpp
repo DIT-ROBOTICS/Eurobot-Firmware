@@ -33,10 +33,10 @@ void Omni::Init() {
 	this->motors[2].Init(2, &htim23, 3.7, 471.0);
 	this->motors[3].Init(3, &htim24, 3.7, 471.0);
 
-	this->encoders[0].Init(0, &htim1);
-	this->encoders[1].Init(1, &htim2);
-	this->encoders[2].Init(2, &htim3);
-	this->encoders[3].Init(3, &htim4);
+	this->encoders[0].Init(0, &htim4);
+	this->encoders[1].Init(1, &htim1);
+	this->encoders[2].Init(2, &htim2);
+	this->encoders[3].Init(3, &htim3);
 
 	SetCarRadius(CAR_RADIUS);
 
