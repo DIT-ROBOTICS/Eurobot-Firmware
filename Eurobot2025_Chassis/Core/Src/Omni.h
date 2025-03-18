@@ -13,9 +13,9 @@ typedef struct {
 
 // TODO: Modify for new car
 typedef struct {
-	double Short = 0.104; // For Driving Wheel
-	double Long = 0.131;  // For Driving Wheel
-	double Sq = 0.115258; // For Dead Wheel
+	double Short = 0.095992; // For Driving Wheel
+	double Long = 0.141025;  // For Driving Wheel
+	double Sq = 0.10748; // For Dead Wheel
 } CAR_DIMENSION;
 
 // Omni control
