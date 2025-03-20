@@ -28,15 +28,15 @@ Omni::Omni() {
 }
 
 void Omni::Init() {
-	this->motors[0].Init(0, &htim5, 3.7, 471.0);
-	this->motors[1].Init(1, &htim8, 3.7, 471.0);
-	this->motors[2].Init(2, &htim23, 3.7, 471.0);
-	this->motors[3].Init(3, &htim24, 3.7, 471.0);
+	this->motors[0].Init(0, &htim1, 3.7, 471.0);
+	this->motors[1].Init(1, &htim2, 3.7, 471.0);
+	this->motors[2].Init(2, &htim3, 3.7, 471.0);
+	this->motors[3].Init(3, &htim4, 3.7, 471.0);
 
-	this->encoders[0].Init(0, &htim4);
-	this->encoders[1].Init(1, &htim1);
-	this->encoders[2].Init(2, &htim2);
-	this->encoders[3].Init(3, &htim3);
+	this->encoders[0].Init(0, &htim5);
+	this->encoders[1].Init(1, &htim8);
+	this->encoders[2].Init(2, &htim23);
+	this->encoders[3].Init(3, &htim24);
 
 	SetCarRadius(CAR_RADIUS);
 
@@ -48,37 +48,39 @@ void Omni::Init() {
 // TODO: Check for kinematics - wheel to robot
 // TODO: Modify encoder use
 // ------------------------
-//	     0    x    \
+//	     3    x    \
 //	    /-----|-----\            
-//	   / |    |    | 1
+//	   / |    |    | 0
 //	     |    |    |               
 //	   y-------    |           
 //	     |         |            
-//	   3 |         | /
+//	   2 |         | /
 //	    \-----------/            
-//	     \         2
+//	     \         1
 // ------------------------
 void Omni::UpdateNowCarInfo_Dead() {
 	// Get each encoders' Vnow
 	// Unit : m/s , rad/s
 	this->UpdateEncoderVnow();
-	double compensation[3] = {1.38, 1.36, 1.25};
-	NowCarInfo_Dead.Vx = compensation[0] * sqrt(2) * (-encoders[0].GetVnow() + encoders[1].GetVnow()
+//	double compensation[3] = {1.38, 1.36, 1.25};
+	double compensation[3] = {1.0, 1.0, 1.0};
+	NowCarInfo_Dead.Vx = compensation[0] * sqrt(2) * (-encoders[0].GetVnow() - encoders[1].GetVnow()
+		+ encoders[2].GetVnow() + encoders[3].GetVnow()) / 4.0;
+	NowCarInfo_Dead.Vy = compensation[1] * sqrt(2) * (-encoders[0].GetVnow() + encoders[1].GetVnow()
 		+ encoders[2].GetVnow() - encoders[3].GetVnow()) / 4.0;
-	NowCarInfo_Dead.Vy = compensation[1] * sqrt(2) * (encoders[0].GetVnow() + encoders[1].GetVnow()
-		- encoders[2].GetVnow() - encoders[3].GetVnow()) / 4.0;
-	NowCarInfo_Dead.Omega = compensation[2] * (encoders[0].GetVnow() + encoders[1].GetVnow()
-		+ encoders[2].GetVnow() + encoders[3].GetVnow()) / (CarRadius_.Sq * 4.0);
+	NowCarInfo_Dead.Omega = compensation[2] * (-encoders[0].GetVnow() - encoders[1].GetVnow()
+		- encoders[2].GetVnow() - encoders[3].GetVnow()) / (CarRadius_.Sq * 4.0);
 }
 void Omni::UpdateCarLocation_Dead() {
 	double e[4];
 	for (int i = 0; i < 4; i++) {
 		e[i] = this->encoders[i].MoveDis() / 1000.0;
 	}
-	double compensation[3] = {4.0, 4.0, 4.0};
-	NowCarLocation_Dead.Vx += compensation[0] * sqrt(2) * (-e[0] + e[1] + e[2] - e[3]) / 4.0;
-	NowCarLocation_Dead.Vy += compensation[1] * sqrt(2) * (e[0] + e[1] - e[2] - e[3]) / 4.0;
-	NowCarLocation_Dead.Omega += compensation[2] * (e[0] + e[1] + e[2] + e[3]) / (CarRadius_.Sq * 4.0);
+//	double compensation[3] = {4.0, 4.0, 4.0};
+	double compensation[3] = {2.0, 2.0, 2.0};
+	NowCarLocation_Dead.Vx += compensation[0] * sqrt(2) * (-e[0] - e[1] + e[2] + e[3]) / 4.0;
+	NowCarLocation_Dead.Vy += compensation[1] * sqrt(2) * (-e[0] + e[1] + e[2] - e[3]) / 4.0;
+	NowCarLocation_Dead.Omega += compensation[2] * (-e[0] - e[1] - e[2] - e[3]) / (CarRadius_.Sq * 4.0);
 }
 
 // ** Driving Wheel Encoder **
@@ -144,10 +146,10 @@ void Omni::UpdateEncoderVnow() {
 // TODO : Check for the DIR
 void Omni::Move() {
 	// DIR
-	HAL_GPIO_WritePin(GPIOD, GPIO_PIN_8, (motors[0].u > 0) ? GPIO_PIN_SET : GPIO_PIN_RESET);
+	HAL_GPIO_WritePin(GPIOD, GPIO_PIN_8, (motors[0].u > 0) ? GPIO_PIN_RESET : GPIO_PIN_SET);
 	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_13, (motors[1].u > 0) ? GPIO_PIN_RESET : GPIO_PIN_SET);
 	HAL_GPIO_WritePin(GPIOE, GPIO_PIN_3, (motors[2].u > 0) ? GPIO_PIN_RESET : GPIO_PIN_SET);
-	HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, (motors[3].u > 0) ? GPIO_PIN_SET : GPIO_PIN_RESET);
+	HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13, (motors[3].u > 0) ? GPIO_PIN_RESET : GPIO_PIN_SET);
 
 	// PWM
 	__HAL_TIM_SET_COMPARE(&htim12, TIM_CHANNEL_2, int(fabs(motors[0].u) * MOTOR_PWM_PULSE));
