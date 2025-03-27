@@ -5,10 +5,10 @@
 extern TIM_HandleTypeDef htim16;
 
 // Encoder
-extern TIM_HandleTypeDef htim1;
-extern TIM_HandleTypeDef htim2;
-extern TIM_HandleTypeDef htim3;
-extern TIM_HandleTypeDef htim4;
+extern TIM_HandleTypeDef htim5;
+extern TIM_HandleTypeDef htim8;
+extern TIM_HandleTypeDef htim23;
+extern TIM_HandleTypeDef htim24;
 
 namespace Dead_Wheel {
 
@@ -22,10 +22,10 @@ void Init() {
 	HAL_TIM_Base_Start_IT(&htim16);
 
     // Init Encoder
-    HAL_TIM_Encoder_Start(&htim1, TIM_CHANNEL_ALL);  // Encoder[0]
-    HAL_TIM_Encoder_Start(&htim2, TIM_CHANNEL_ALL);  // Encoder[1]
-    HAL_TIM_Encoder_Start(&htim3, TIM_CHANNEL_ALL); // Encoder[2]
-    HAL_TIM_Encoder_Start(&htim4, TIM_CHANNEL_ALL); // Encoder[3]
+    HAL_TIM_Encoder_Start(&htim5, TIM_CHANNEL_ALL);  // Encoder[0]
+    HAL_TIM_Encoder_Start(&htim8, TIM_CHANNEL_ALL);  // Encoder[1]
+    HAL_TIM_Encoder_Start(&htim23, TIM_CHANNEL_ALL); // Encoder[2]
+    HAL_TIM_Encoder_Start(&htim24, TIM_CHANNEL_ALL); // Encoder[3]
 }
 
 void Encoder::Init(short num, TIM_HandleTypeDef *TIM) {
