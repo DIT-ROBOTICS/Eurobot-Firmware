@@ -8,6 +8,7 @@
 #include "std_msgs/Bool.h"
 
 #define ROS_CAR_PUB_FREQUENCY 10
+#define ROS_STOP_PUB_FREQUENCY 100
 
 namespace ROS {
 
@@ -18,6 +19,7 @@ void init();
 // Publisher
 void PubCarVnow_Dead();
 void PubCarVnow_Driving();
+void PubResetNavigation(bool data);
 
 // Subscriber
 void GoalVel_CB(const geometry_msgs::Twist &msg);

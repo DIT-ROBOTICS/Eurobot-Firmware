@@ -32,6 +32,8 @@ geometry_msgs::Twist CarVnow_Driving;
 static CAR_INFO NowCarInfo_Driving;
 static CAR_INFO NowCarLoc_Driving;
 
+std_msgs::Bool stop;
+
 ros::Subscriber<geometry_msgs::Twist> CarVelSub("cmd_vel", ROS::GoalVel_CB);
 ros::Subscriber<std_msgs::Bool> StartSub("/startornot", ROS::Start_CB);
 ros::Subscriber<std_msgs::String> FinishSub("/mission0", ROS::Finish_CB);
@@ -44,6 +46,7 @@ ros::Subscriber<std_msgs::String> FinishSub("/mission0", ROS::Finish_CB);
 
 ros::Publisher CarVelPub_Dead("odoo_googoogoo", &CarVnow_Dead);
 ros::Publisher CarVelPub_Driving("driving_duaiduaiduai", &CarVnow_Driving);
+ros::Publisher ResetNavigation("stopRobot", &stop);
 
 void ROS::GoalVel_CB(const geometry_msgs::Twist &msg) {
 	omni.SetGoalCarInfo(msg.linear.x, msg.linear.y, msg.angular.z);
@@ -60,8 +63,8 @@ void ROS::Start_CB(const std_msgs::Bool &msg) {
 
 void ROS::Finish_CB(const std_msgs::String &msg) {
 	if (msg.data[0] == 'f' && msg.data[1] == '0') {
-		HAL_TIM_PWM_Stop(&htim12, TIM_CHANNEL_2);
 		HAL_TIM_PWM_Stop(&htim12, TIM_CHANNEL_1);
+		HAL_TIM_PWM_Stop(&htim12, TIM_CHANNEL_2);
 		HAL_TIM_PWM_Stop(&htim15, TIM_CHANNEL_1);
 		HAL_TIM_PWM_Stop(&htim15, TIM_CHANNEL_2);
 	}
@@ -107,8 +110,9 @@ void ROS::setup() {
 	nh.initNode();
 
 	nh.subscribe(CarVelSub);
-	nh.subscribe(StartSub);
-	nh.subscribe(FinishSub);
+	// Unused subscribers
+//	nh.subscribe(StartSub);
+//	nh.subscribe(FinishSub);
 
 #ifdef DEBUGGER_MODE
 	nh.subscribe(DebugCarGoalSub);
@@ -118,6 +122,7 @@ void ROS::setup() {
 
 	nh.advertise(CarVelPub_Dead);
 	nh.advertise(CarVelPub_Driving);
+	nh.advertise(ResetNavigation);
 
 	HAL_TIM_Base_Start_IT(&htim7);
 }
@@ -143,30 +148,6 @@ void ROS::PubCarVnow_Dead() {
 	CarVnow_Dead.angular.y = NowCarLoc_Dead.Vy;
 	CarVnow_Dead.linear.z = NowCarLoc_Dead.Omega;
 
-//	CarVnow_Dead.linear.x = omni.GetMotorVnow(0);
-//	CarVnow_Dead.linear.y = omni.GetMotorVnow(1);
-//	CarVnow_Dead.angular.z = omni.GetMotorVnow(2);
-//
-//	CarVnow_Dead.angular.x = omni.GetMotorVnow(3);
-//	CarVnow_Dead.angular.y = NowCarLoc_Dead.Vy;
-//	CarVnow_Dead.linear.z = NowCarLoc_Dead.Omega;
-
-//	if(i<1000){
-//		MotorVnow_0[i] = omni.GetMotorVnow(0);
-//		MotorVnow_1[i] = omni.GetMotorVnow(1);
-//		MotorVnow_2[i] = omni.GetMotorVnow(2);
-//		MotorVnow_3[i] = omni.GetMotorVnow(3);
-//	}
-//	if(omni.GoalCarInfo.Vx != 0 || omni.GoalCarInfo.Vy != 0)	i++;
-
-//	CarVnow_Dead.linear.x = TIM5->CNT;
-//	CarVnow_Dead.linear.y = TIM8->CNT;
-//	CarVnow_Dead.angular.z = TIM23->CNT;
-//
-//	CarVnow_Dead.angular.x = TIM24->CNT;
-//	CarVnow_Dead.angular.y = NowCarLoc_Dead.Vy;
-//	CarVnow_Dead.linear.z = NowCarLoc_Dead.Omega;
-
 	CarVelPub_Dead.publish(&CarVnow_Dead);
 }
 
@@ -183,6 +164,11 @@ void ROS::PubCarVnow_Driving() {
 	CarVnow_Driving.linear.z = NowCarLoc_Driving.Omega;
 
 	CarVelPub_Driving.publish(&CarVnow_Driving);
+}
+
+void ROS::PubResetNavigation(bool data) {
+	stop.data = data;
+	ResetNavigation.publish(&stop);
 }
 
 void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart) {
