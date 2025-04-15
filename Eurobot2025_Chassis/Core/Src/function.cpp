@@ -15,10 +15,13 @@ double Vz_goal = 0.0;
 // ROS spinOnce
 extern TIM_HandleTypeDef htim7;
 
-
 // Count ROS frequency.
 static int ROS_CAR_FREQUENCY_Driving = 0;
 static int ROS_CAR_FREQUENCY_Dead = 0;
+static int ROS_CAR_FREQUENCY_Stop = 0;
+
+// Publish stopRobot only twice(On/Off)
+static int stop_countdown = 10;
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 	if (htim->Instance == TIM13) {
@@ -56,5 +59,14 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 	}
 	else if (htim->Instance == TIM7) {
 		ROS::loop();
+		// ROS pub
+		if (++ROS_CAR_FREQUENCY_Stop >= ROS_STOP_PUB_FREQUENCY && stop_countdown) {
+			bool data;
+			if(stop_countdown > 3)	data = true;
+			else	data = false;
+			ROS_CAR_FREQUENCY_Stop = 0;
+			ROS::PubResetNavigation(data);
+			stop_countdown--;
+		}
 	}
 }
