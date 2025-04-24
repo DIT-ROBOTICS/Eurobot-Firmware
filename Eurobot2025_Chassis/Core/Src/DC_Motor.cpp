@@ -9,10 +9,10 @@ extern TIM_HandleTypeDef htim12;
 extern TIM_HandleTypeDef htim15;
 
 // Encoder
-extern TIM_HandleTypeDef htim5;
-extern TIM_HandleTypeDef htim8;
-extern TIM_HandleTypeDef htim23;
-extern TIM_HandleTypeDef htim24;
+extern TIM_HandleTypeDef htim1;
+extern TIM_HandleTypeDef htim2;
+extern TIM_HandleTypeDef htim3;
+extern TIM_HandleTypeDef htim4;
 
 namespace DC_Motor {
 double WheelRadius[4] = {0.024, 0.024, 0.024, 0.024};
@@ -24,10 +24,10 @@ void Init() {
 	HAL_TIM_Base_Start_IT(&htim13);
 
 	// Init Encoder
-	HAL_TIM_Encoder_Start(&htim5, TIM_CHANNEL_ALL); // Motor[0]
-	HAL_TIM_Encoder_Start(&htim8, TIM_CHANNEL_ALL); // Motor[1]
-	HAL_TIM_Encoder_Start(&htim23, TIM_CHANNEL_ALL); // Motor[2]
-	HAL_TIM_Encoder_Start(&htim24, TIM_CHANNEL_ALL); // Motor[3]
+	HAL_TIM_Encoder_Start(&htim1, TIM_CHANNEL_ALL); // Motor[0]
+	HAL_TIM_Encoder_Start(&htim2, TIM_CHANNEL_ALL); // Motor[1]
+	HAL_TIM_Encoder_Start(&htim3, TIM_CHANNEL_ALL); // Motor[2]
+	HAL_TIM_Encoder_Start(&htim4, TIM_CHANNEL_ALL); // Motor[3]
 
 	// Init Motor PWM
 	HAL_TIM_PWM_Start(&htim12, TIM_CHANNEL_2); // Motor[0]
